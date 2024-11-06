@@ -1,3 +1,41 @@
+<?php
+// Connexion à la base de données
+$servername = "localhost";  // Nom du serveur
+$username = "root";         // Nom d'utilisateur
+$password = "";             // Mot de passe
+$dbname = "InventQR";       // Nom de la base de données
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Erreur de connexion : " . $conn->connect_error);
+}
+
+if (isset($_POST['create_product'])) {
+    require 'phpqrcode/qrlib.php'; // Assurez-vous que cette bibliothèque est incluse et fonctionnelle
+
+    $nom = $conn->real_escape_string($_POST['nom']);
+    $quantite = (int) $_POST['quantite'];
+
+    // Générer le QR code
+    $qrData = $nom;
+    $qrFile = 'qr_codes/' . md5($qrData) . '.png';
+    if (!is_dir('qr_codes')) {
+        mkdir('qr_codes', 0777, true);
+    }
+
+    QRcode::png($qrData, $qrFile, QR_ECLEVEL_L, 10);
+
+    // Insertion dans la base de données
+    $sql = "INSERT INTO produits (nom, quantite, qrcode) VALUES ('$nom', $quantite, '$qrFile')";
+    if ($conn->query($sql) === TRUE) {
+        echo "<p>Produit créé avec succès !</p>";
+    } else {
+        echo "<p>Erreur : " . $conn->error . "</p>";
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -7,7 +45,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <div class="navbar">
         <ul>
             <li><a href="menu.php">Menu</a></li>
@@ -17,35 +54,19 @@
         </ul>
     </div>
 
-    <div class="container">
-        <h1>page gestion des stocks !</h1>
-        <p>para1</p>
+    <h1>Création d'un nouveau produit</h1>
+    <form method="POST" action="gestiondestocks.php">
+        <label for="nom">Nom du produit :</label>
+        <input type="text" name="nom" id="nom" required>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Nom Produit</th>
-                    <th>Quantité</th>
-                    <th>Ajouter</th>
-                    <th>Supprimer</th>
-                    <th>Modifier</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><input type="text" id="nomProduit_1" name="nomProduit_1"></td>
-                    <td><input type="number" id="quantite_1" name="quantite_1" min="1"></td>
-                    <td><button class="ajouter" onclick="">Ajouter</button></td>
-                    <td><button class="supprimer" onclick="">Supprimer</button></td>
-                    <td><button class="modifier" onclick="">Modifier</button></td>
-                </tr>
-                <!-- Autres produits peuvent être ajoutés ici de manière dynamique -->
-            </tbody>
-        </table>
+        <label for="quantite">Quantité :</label>
+        <input type="number" name="quantite" id="quantite" required>
 
-
-        
-    </div>
-
+        <button type="submit" name="create_product">Créer le produit</button>
+    </form>
 </body>
 </html>
+
+<?php
+$conn->close();
+?>
