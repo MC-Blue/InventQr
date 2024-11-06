@@ -1,0 +1,48 @@
+
+
+
+
+
+/* Style général de la page */
+body {
+    background-color: white;  /* Fond blanc */
+    font-family: Arial, sans-serif;  /* Police de caractères */
+    margin: 0;
+    padding: 0;
+}
+
+/* Bandeau de menu */
+.navbar {
+    background-color: #FDB94B;  /* Couleur du bandeau de menu */
+    padding: 10px 0;
+    text-align: center;
+}
+
+.navbar ul {
+    list-style-type: none;  /* Retirer les puces */
+    margin: 0;
+    padding: 0;
+}
+
+.navbar li {
+    display: inline-block;
+    margin-right: 20px;  /* Espacement entre les éléments */
+}
+
+.navbar a {
+    text-decoration: none;
+    color: white;  /* Texte blanc */
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease;  /* Effet de transition */
+}
+
+.navbar a:hover {
+    background-color: #FFCA6C;  /* Couleur de survol (un ton plus clair que le bandeau) */
+}
+
+/* Ajouter un peu de padding à la page */
+.container {
+    padding: 20px;
+}
