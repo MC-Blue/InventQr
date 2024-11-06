@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -11,9 +10,9 @@
 
     <div class="navbar">
         <ul>
-            <li><a href="menu.html">Menu</a></li>
-            <li><a href="gestiondestocks.html">Gestion des stocks</a></li>
-            <li><a href="refererenceproduit.html">Référence Produit</a></li>
+            <li><a href="menu.php">Menu</a></li>
+            <li><a href="gestiondestocks.php">Gestion des stocks</a></li>
+            <li><a href="referenceproduit.php">Référence Produit</a></li>
             <li><a href="#">Contact</a></li>
         </ul>
     </div>
@@ -22,11 +21,9 @@
         <h1>page menu !</h1>
         <p>para1</p>
 
-    <!-- Le reste du contenu -->
-    <!-- un tableau similaire au tableau gestion de stocks mais qui a comme case nom produit, description, id et QRCODE -->
+        <!-- Dans cette page il faut un bouton qui envoie sur la page gestion dess stocks, un bouton qui envoie sur la page produit et le menu en haut qui doit figurer sur chaque page. -->
 
     </div>
 
 </body>
 </html>
-

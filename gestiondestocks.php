@@ -10,9 +10,9 @@
 
     <div class="navbar">
         <ul>
-            <li><a href="file:///C:/Users/Lorenzo.teatini/Desktop/inventqr/menu.html">Menu</a></li>
-            <li><a href="file:///C:/Users/Lorenzo.teatini/Desktop/inventqr/gestiondestocks.html">Gestion des stocks</a></li>
-            <li><a href="file:///C:/Users/Lorenzo.teatini/Desktop/inventqr/r%C3%A9f%C3%A9renceproduit.html">Référence Produit</a></li>
+            <li><a href="menu.php">Menu</a></li>
+            <li><a href="gestiondestocks.php">Gestion des stocks</a></li>
+            <li><a href="referenceproduit.php">Référence Produit</a></li>
             <li><a href="#">Contact</a></li>
         </ul>
     </div>
