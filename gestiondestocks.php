@@ -1,9 +1,9 @@
 <?php
 // Connexion à la base de données
-$servername = "localhost";  // Nom du serveur
-$username = "root";         // Nom d'utilisateur
-$password = "";             // Mot de passe
-$dbname = "InventQR";       // Nom de la base de données
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "InventQR";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -17,22 +17,34 @@ if (isset($_POST['create_product'])) {
     $nom = $conn->real_escape_string($_POST['nom']);
     $quantite = (int) $_POST['quantite'];
 
-    // Générer le QR Code
-    $qrData = $nom;
-    $qrFile = 'qr_codes/' . md5($qrData) . '.png';
-    if (!is_dir('qr_codes')) {
-        mkdir('qr_codes', 0777, true);
-    }
-
-    // Générer et sauvegarder le QR code
-    QRcode::png($qrData, $qrFile, QR_ECLEVEL_L, 10);
-
-    // Insertion dans la base de données
-    $sql = "INSERT INTO produits (nom, quantite, qrcode) VALUES ('$nom', $quantite, '$qrFile')";
+    // Insertion dans la base de données sans QR code
+    $sql = "INSERT INTO produits (nom, quantite, qrcode) VALUES ('$nom', $quantite, '')";
     if ($conn->query($sql) === TRUE) {
-        echo "<p>Produit créé avec succès !</p>";
+        $productId = $conn->insert_id;  // Récupérer l'ID du produit inséré
+
+        // Générer le QR Code avec l'ID du produit
+        $qrData = $productId;  // Utiliser l'ID comme données du QR code
+        $qrFile = 'qr_codes/' . $productId . '.png'; // Nom du fichier basé sur l'ID
+        
+        if (!is_dir('qr_codes')) {
+            mkdir('qr_codes', 0777, true); // Créer le dossier si nécessaire
+        }
+
+        // Générer et sauvegarder le QR code
+        QRcode::png($qrData, $qrFile, QR_ECLEVEL_L, 10);
+
+        // Mettre à jour le produit avec le chemin du QR code généré
+        $updateSql = "UPDATE produits SET qrcode = '$qrFile' WHERE id = $productId";
+        if ($conn->query($updateSql) === TRUE) {
+            $message = "Produit créé avec succès et QR Code généré !";
+            $modalType = 'success';
+        } else {
+            $message = "Erreur lors de la mise à jour du QR Code : " . $conn->error;
+            $modalType = 'error';
+        }
     } else {
-        echo "<p>Erreur : " . $conn->error . "</p>";
+        $message = "Erreur lors de la création du produit : " . $conn->error;
+        $modalType = 'error';
     }
 }
 ?>
@@ -56,6 +68,14 @@ if (isset($_POST['create_product'])) {
     </div>
 
     <h1>Création d'un nouveau produit</h1>
+
+
+    <?php if (isset($message)) { ?>
+        <div class="modal-message <?php echo $modalType; ?>" id="modalMessage">
+            <p><?php echo $message; ?></p>
+        </div>
+    <?php } ?>
+
     <form method="POST" action="gestiondestocks.php">
         <label for="nom">Nom du produit :</label>
         <input type="text" name="nom" id="nom" required>
@@ -65,6 +85,21 @@ if (isset($_POST['create_product'])) {
 
         <button type="submit" name="create_product">Créer le produit</button>
     </form>
+
+    <script>
+
+        function closeModal() {
+            var modal = document.getElementById('modalMessage');
+            modal.style.display = 'none';
+        }
+
+        // Fonction pour ouvrir le modal
+        window.onload = function() {
+            if (document.getElementById('modalMessage')) {
+                document.getElementById('modalMessage').style.display = 'flex';
+            }
+        };
+    </script>
 </body>
 </html>
 
