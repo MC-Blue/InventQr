@@ -1,48 +1,80 @@
-
-
-
-
-
-/* Style général de la page */
-body {
-    background-color: white;  /* Fond blanc */
-    font-family: Arial, sans-serif;  /* Police de caractères */
-    margin: 0;
-    padding: 0;
+/* Style pour la fenêtre modale */
+.modal {
+    display: none; /* Cachée par défaut */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); /* Fond semi-transparent */
 }
 
-/* Bandeau de menu */
-.navbar {
-    background-color: #FDB94B;  /* Couleur du bandeau de menu */
-    padding: 10px 0;
-    text-align: center;
-}
-
-.navbar ul {
-    list-style-type: none;  /* Retirer les puces */
-    margin: 0;
-    padding: 0;
-}
-
-.navbar li {
-    display: inline-block;
-    margin-right: 20px;  /* Espacement entre les éléments */
-}
-
-.navbar a {
-    text-decoration: none;
-    color: white;  /* Texte blanc */
-    font-size: 16px;
-    font-weight: bold;
-    padding: 10px 20px;
-    transition: background-color 0.3s ease;  /* Effet de transition */
-}
-
-.navbar a:hover {
-    background-color: #FFCA6C;  /* Couleur de survol (un ton plus clair que le bandeau) */
-}
-
-/* Ajouter un peu de padding à la page */
-.container {
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
     padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px; /* Coins arrondis */
+}
+
+.modal-content p {
+    font-size: 18px;
+    margin: 0;
+    padding: 10px 0;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Styles pour les messages de succès et d'erreur */
+.modal .success {
+    color: green;
+    font-weight: bold;
+}
+
+.modal .error {
+    color: red;
+    font-weight: bold;
+}
+
+/* Bouton de confirmation dans la modale */
+.modal button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50; /* Bouton vert pour la réussite */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modal button:hover {
+    background-color: #45a049;
+}
+
+/* Modale avec style d'animation */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.modal-content {
+    animation: fadeIn 0.3s ease;
 }
