@@ -12,7 +12,7 @@ if ($conn->connect_error) {
 }
 
 if (isset($_POST['create_product'])) {
-    require 'phpqrcode/qrlib.php'; // Assurez-vous que cette bibliothèque est incluse et fonctionnelle
+    require 'lib\phpqrcode.php'; // Assurez-vous que cette bibliothèque est incluse et fonctionnelle
 
     $nom = $conn->real_escape_string($_POST['nom']);
     $quantite = (int) $_POST['quantite'];
