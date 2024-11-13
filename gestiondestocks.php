@@ -1,39 +1,53 @@
 <?php
-// Connexion à la base de données
-$servername = "localhost";  // Nom du serveur
-$username = "root";         // Nom d'utilisateur
-$password = "";             // Mot de passe
-$dbname = "InventQR";       // Nom de la base de données
+// Informations de connexion à la base de données
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "InventQR";
 
+// Création de la connexion
 $conn = new mysqli($servername, $username, $password, $dbname);
 
+// Vérification de la connexion
 if ($conn->connect_error) {
-    die("Erreur de connexion : " . $conn->connect_error);
+    die("La connexion a échoué : " . $conn->connect_error);
 }
 
+require 'vendor/autoload.php'; // Chargez Composer autoloader pour Endroid QR Code
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelL;
+
 if (isset($_POST['create_product'])) {
-    require 'phpqrcode/qrlib.php'; // Assurez-vous que cette bibliothèque est incluse et fonctionnelle
-
-    $nom = $conn->real_escape_string($_POST['nom']);
+    // Récupérer les données du formulaire
+    $nom = $_POST['nom'];
     $quantite = (int) $_POST['quantite'];
-
-    // Générer le QR code
-    $qrData = $nom;
+    
+    // Génération du QR Code
+    $qrData = $nom . ' - Quantité: ' . $quantite;
+    $qrCode = new QrCode($qrData);
+    $qrCode->setEncoding(Encoding::UTF_8)
+           ->setErrorCorrectionLevel(new ErrorCorrectionLevelL())
+           ->setSize(10)
+           ->setMargin(4);
+    
     $qrFile = 'qr_codes/' . md5($qrData) . '.png';
-    if (!is_dir('qr_codes')) {
-        mkdir('qr_codes', 0777, true);
-    }
-
-    QRcode::png($qrData, $qrFile, QR_ECLEVEL_L, 10);
-
+    $writer = new PngWriter();
+    $writer->writeFile($qrCode, $qrFile);
+    
     // Insertion dans la base de données
     $sql = "INSERT INTO produits (nom, quantite, qrcode) VALUES ('$nom', $quantite, '$qrFile')";
     if ($conn->query($sql) === TRUE) {
-        echo "<p>Produit créé avec succès !</p>";
+        echo "<div class='modal' style='display: block;'>Produit ajouté avec succès!</div>";
     } else {
         echo "<p>Erreur : " . $conn->error . "</p>";
     }
 }
+
+// Récupération des produits depuis la base de données
+$sql = "SELECT * FROM produits";
+$result = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -54,19 +68,61 @@ if (isset($_POST['create_product'])) {
         </ul>
     </div>
 
-    <h1>Création d'un nouveau produit</h1>
-    <form method="POST" action="gestiondestocks.php">
-        <label for="nom">Nom du produit :</label>
-        <input type="text" name="nom" id="nom" required>
+    <div class="container">
+        <h1>Gestion des Stocks</h1>
 
-        <label for="quantite">Quantité :</label>
-        <input type="number" name="quantite" id="quantite" required>
+        <!-- Formulaire pour ajouter un produit -->
+        <form action="gestiondestocks.php" method="POST">
+            <label for="nom">Nom du Produit :</label>
+            <input type="text" id="nom" name="nom" required>
+            
+            <label for="quantite">Quantité :</label>
+            <input type="number" id="quantite" name="quantite" min="1" required>
+            
+            <button type="submit" name="create_product">Créer le Produit</button>
+        </form>
 
-        <button type="submit" name="create_product">Créer le produit</button>
-    </form>
+        <!-- Tableau des produits -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom Produit</th>
+                    <th>Quantité</th>
+                    <th>QR Code</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . htmlspecialchars($row['nom']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['quantite']) . "</td>";
+                        echo "<td><img src='" . htmlspecialchars($row['qrcode']) . "' alt='QR Code' width='50'></td>";
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='3'>Aucun produit trouvé</td></tr>";
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Script pour afficher le modal
+        var modal = document.querySelector('.modal');
+        if (modal) {
+            modal.style.display = 'block';
+            setTimeout(function() {
+                modal.style.display = 'none';
+            }, 2000);
+        }
+    </script>
 </body>
 </html>
 
 <?php
+// Fermeture de la connexion
 $conn->close();
 ?>
