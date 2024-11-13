@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 // Informations de connexion à la base de données
 $servername = "localhost";
@@ -50,6 +51,8 @@ $sql = "SELECT * FROM produits";
 $result = $conn->query($sql);
 ?>
 
+=======
+>>>>>>> parent of 7829960 (V1.0)
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -59,6 +62,7 @@ $result = $conn->query($sql);
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <div class="navbar">
         <ul>
             <li><a href="menu.php">Menu</a></li>
@@ -69,6 +73,7 @@ $result = $conn->query($sql);
     </div>
 
     <div class="container">
+<<<<<<< HEAD
         <h1>Gestion des Stocks</h1>
 
         <!-- Formulaire pour ajouter un produit -->
@@ -126,3 +131,36 @@ $result = $conn->query($sql);
 // Fermeture de la connexion
 $conn->close();
 ?>
+=======
+        <h1>page gestion des stocks !</h1>
+        <p>para1</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom Produit</th>
+                    <th>Quantité</th>
+                    <th>Ajouter</th>
+                    <th>Supprimer</th>
+                    <th>Modifier</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text" id="nomProduit_1" name="nomProduit_1"></td>
+                    <td><input type="number" id="quantite_1" name="quantite_1" min="1"></td>
+                    <td><button class="ajouter" onclick="">Ajouter</button></td>
+                    <td><button class="supprimer" onclick="">Supprimer</button></td>
+                    <td><button class="modifier" onclick="">Modifier</button></td>
+                </tr>
+                <!-- Autres produits peuvent être ajoutés ici de manière dynamique -->
+            </tbody>
+        </table>
+
+
+        
+    </div>
+
+</body>
+</html>
+>>>>>>> parent of 7829960 (V1.0)
