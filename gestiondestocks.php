@@ -40,67 +40,98 @@ if (isset($_POST['create_product'])) {
             $modalType = 'success';
         } else {
             $message = "Erreur lors de la mise à jour du QR Code : " . $conn->error;
-            $modalType = 'error';
+            $modalType = 'danger';
         }
     } else {
         $message = "Erreur lors de la création du produit : " . $conn->error;
-        $modalType = 'error';
+        $modalType = 'danger';
     }
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des stocks</title>
-    <link rel="stylesheet" href="style.css">
+    <!-- Lien vers le CSS de Bootstrap 5 depuis un CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
-    <div class="navbar">
-        <ul>
-            <li><a href="menu.php">Menu</a></li>
-            <li><a href="gestiondestocks.php">Gestion des stocks</a></li>
-            <li><a href="referenceproduit.php">Référence Produit</a></li>
-            <li><a href="#">Contact</a></li>
-        </ul>
+    <!-- Barre de navigation avec Bootstrap 5 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">InventQR</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="menu.php">Menu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="gestiondestocks.php">Gestion des stocks</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="referenceproduit.php">Référence Produit</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h1>Création d'un nouveau produit</h1>
+
+        <!-- Message de succès ou d'erreur -->
+        <?php if (isset($message)) { ?>
+            <div class="alert alert-<?php echo $modalType; ?> mt-3" role="alert">
+                <?php echo $message; ?>
+            </div>
+        <?php } ?>
+
+        <!-- Formulaire de création du produit -->
+        <form method="POST" action="gestiondestocks.php" class="mt-4">
+            <div class="mb-3">
+                <label for="nom" class="form-label">Nom du produit</label>
+                <input type="text" name="nom" id="nom" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="quantite" class="form-label">Quantité</label>
+                <input type="number" name="quantite" id="quantite" class="form-control" required>
+            </div>
+
+            <button type="submit" name="create_product" class="btn btn-primary">Créer le produit</button>
+        </form>
+
+        <br>
+        <a href="referenceproduit.php" class="btn btn-secondary">Retour à la liste des produits</a>
     </div>
 
-    <h1>Création d'un nouveau produit</h1>
-
-
-    <?php if (isset($message)) { ?>
-        <div class="modal-message <?php echo $modalType; ?>" id="modalMessage">
-            <p><?php echo $message; ?></p>
-        </div>
-    <?php } ?>
-
-    <form method="POST" action="gestiondestocks.php">
-        <label for="nom">Nom du produit :</label>
-        <input type="text" name="nom" id="nom" required>
-
-        <label for="quantite">Quantité :</label>
-        <input type="number" name="quantite" id="quantite" required>
-
-        <button type="submit" name="create_product">Créer le produit</button>
-    </form>
+    <!-- Lien vers le JS de Bootstrap 5 depuis un CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 
     <script>
-
-        function closeModal() {
-            var modal = document.getElementById('modalMessage');
-            modal.style.display = 'none';
-        }
-
-        // Fonction pour ouvrir le modal
+        // Fonction pour ouvrir et fermer le modal
         window.onload = function() {
-            if (document.getElementById('modalMessage')) {
-                document.getElementById('modalMessage').style.display = 'flex';
+            var modalMessage = document.getElementById('modalMessage');
+            if (modalMessage) {
+                modalMessage.style.display = 'flex';
             }
         };
     </script>
 </body>
+
 </html>
 
 <?php
